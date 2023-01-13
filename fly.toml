@@ -1,18 +1,13 @@
-# fly.toml file generated for flying-jekyll on 2023-01-13T16:14:43-05:00
+# fly.toml file generated for flying-jekyll on 2023-01-13T16:33:13-05:00
 
 app = "flying-jekyll"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-  build-target = "runner"
-
 [env]
-  PORT = "8080"
 
 [experimental]
-  allowed_public_ports = []
   auto_rollback = true
 
 [[services]]
