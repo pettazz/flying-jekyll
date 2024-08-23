@@ -34,4 +34,27 @@ A skeleton for setting up a Jekyll blog that automatically builds and deploys on
 5. You can see the build Action status in the Actions tab on your repository's page. If it fails you will receive an email with error details.
 6. Once completed successfully, verify that you can see your changes on your site (either fly.io dev hostname or your custom domain)
 
+#### Using Secrets 
+The workflow and Dockerfile are configured to pass any Secrets from the GitHub settings into the build context as environment variables, and interpolate those values into `_config.yml`. For example, if you set a repository secret called `MY_COOL_API_KEY`, you will be able to reference `$MY_COOL_API_KEY` in your settings so as to not expose this key by checking it into the repository.
+
+1. In `_config.yml`, replace whatever sensitive value you are trying to hide with a variable name, i.e.:
+
+  Before:
+
+  ```yaml
+  webservice:
+    access_token: 1234-dead-beef
+  ```
+
+  After:
+
+  ```yaml
+  webservice:
+    access_token: $MY_COOL_API_KEY
+  ```
+
+2. In your GitHub repository, click the Settings tab, and select Secrets and Variables > Actions from the left menu
+3. Click the "New repository secret" button and fill in the Name of the variable you want to use (i.e., `MY_COOL_API_KEY`) and the Secret with its value (i.e., `1234-dead-beef`), then click Add secret
+4. Build and enjoy!
+
 ## Enjoy all the indescribable pleasures of owning a website
