@@ -35,9 +35,9 @@ A skeleton for setting up a Jekyll blog that automatically builds and deploys on
 6. Once completed successfully, verify that you can see your changes on your site (either fly.io dev hostname or your custom domain)
 
 #### Using Secrets 
-The workflow and Dockerfile are configured to pass any Secrets from the GitHub settings into the build context as environment variables, and interpolate those values into `_config.yml`. For example, if you set a repository secret called `MY_COOL_API_KEY`, you will be able to reference `$MY_COOL_API_KEY` in your settings so as to not expose this key by checking it into the repository.
+The workflow and Dockerfile are configured to pass any Secrets from the GitHub settings into the build context as environment variables, and interpolate those values into `_config.yml` and `nginx.conf`. For example, if you set a repository secret called `MY_COOL_API_KEY`, you will be able to reference `${MY_COOL_API_KEY}` in your settings so as to not expose this key by checking it into the repository.
 
-1. In `_config.yml`, replace whatever sensitive value you are trying to hide with a variable name, i.e.:
+1. In `_config.yml` or `nginx.conf`, replace whatever sensitive value you are trying to hide with a variable name, i.e.:
 
   Before:
 
@@ -50,11 +50,31 @@ The workflow and Dockerfile are configured to pass any Secrets from the GitHub s
 
   ```yaml
   webservice:
-    access_token: $MY_COOL_API_KEY
+    access_token: ${MY_COOL_API_KEY}
   ```
+
+Any existing environment variables will be interpolated, so be careful if using Nginx variables. 
 
 2. In your GitHub repository, click the Settings tab, and select Secrets and Variables > Actions from the left menu
 3. Click the "New repository secret" button and fill in the Name of the variable you want to use (i.e., `MY_COOL_API_KEY`) and the Secret with its value (i.e., `1234-dead-beef`), then click Add secret
 4. Build and enjoy!
+
+## Optional Dark Visitors Support
+
+[Dark Visitors](https://darkvisitors.com) is a service that provides live monitoring for automated User Agents and sources that information to maintain a list of known AI scrapers and crawlers. You can configure your Jekyll site to both send events to Dark Visitors for tracking and to block AI scrapers. It's free up to a certain amount of traffic.
+
+1. Sign up for Dark Visitors and get an access token: https://darkvisitors.com/docs/analytics
+2. Set your access token as a secret called DARK_VISITORS_TOKEN in GitHub settings (see [Using Secrets](#using-secrets) above)
+3. Replace `nginx.conf` with `nginx-darkvisitors.conf`, either copy paste the contents or rename it to `nginx.conf` and replace the old one
+4. In the `Dockerfile`, replace the line:
+
+    `FROM nginx:alpine AS runner`
+
+with 
+
+    `FROM openresty/openresty:alpine AS runner`
+
+You will notice a comment mentioning this in the file.
+5. Once your site is deployed, you can check the Dark Visitors realtime dashboard to verify that it's working. Visiting your site with a known AI user agent like `ClaudeBot` should result in a 403
 
 ## Enjoy all the indescribable pleasures of owning a website
