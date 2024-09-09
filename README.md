@@ -66,13 +66,15 @@ Any existing environment variables will be interpolated, so be careful if using 
 1. Sign up for Dark Visitors and get an access token: https://darkvisitors.com/docs/analytics
 2. Set your access token as a secret called DARK_VISITORS_TOKEN in GitHub settings (see [Using Secrets](#using-secrets) above)
 3. Replace `nginx.conf` with `nginx-darkvisitors.conf`, either copy paste the contents or rename it to `nginx.conf` and replace the old one
-4. In the `Dockerfile`, replace the line:
+4. In the `Dockerfile`, change the base image from plain Nginx to OpenResty
 
-    `FROM nginx:alpine AS runner`
+Replace the line:
 
-with 
+    FROM nginx:alpine AS runner
 
-    `FROM openresty/openresty:alpine AS runner`
+with:
+
+    FROM openresty/openresty:alpine AS runner
 
 You will notice a comment mentioning this in the file.
 5. Once your site is deployed, you can check the Dark Visitors realtime dashboard to verify that it's working. Visiting your site with a known AI user agent like `ClaudeBot` should result in a 403
