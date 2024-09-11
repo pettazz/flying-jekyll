@@ -29,4 +29,7 @@ WORKDIR /app
 COPY --from=builder /build-zone/_site/ ./
 COPY --from=builder /build-zone/nginx.conf /etc/nginx/nginx.conf
 
+# replace the line above with this one if using Dark Visitors 
+# COPY --from=builder /build-zone/nginx.conf /etc/nginx/conf.d/site.conf
+
 EXPOSE 8080

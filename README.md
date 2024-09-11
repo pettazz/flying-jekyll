@@ -76,7 +76,17 @@ with:
 
     FROM openresty/openresty:alpine AS runner
 
-You will notice a comment mentioning this in the file.
+And update the destination of `nginx.conf`,
+
+Replace the line:
+
+    COPY --from=builder /build-zone/nginx.conf /etc/nginx/nginx.conf
+
+with: 
+
+    COPY --from=builder /build-zone/nginx.conf /etc/nginx/conf.d/site.conf
+
+You will notice comments in the Dockerfile mentioning both of these.
 
 5. Once your site is deployed, you can check the Dark Visitors realtime dashboard to verify that it's working. Visiting your site with a known AI user agent like `ClaudeBot` should result in a 403
 
